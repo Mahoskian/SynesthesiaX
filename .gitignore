@@ -1,5 +1,5 @@
 # .gitignore
 .env
-/MusicAnalysis/venv1
-/MusicAnalysis/config.py
-/MusicAnalysis/spotify_tokens.json
+/MusicAnalysis/Spotify/venv1
+/MusicAnalysis/Spotify/config.py
+/MusicAnalysis/Sptoify/spotify_tokens.json
