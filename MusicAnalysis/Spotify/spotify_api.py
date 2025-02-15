@@ -3,10 +3,12 @@ import json
 import time
 import threading
 import webbrowser
+import os
 from config import CLIENT_ID, CLIENT_SECRET
 from flask import Flask, request, jsonify
 
 # https://developer.spotify.com/dashboard
+# http://localhost:8888/login
 
 # 🔹 Replace with your Spotify Developer credentials
 REDIRECT_URI = "http://localhost:8888/callback"
@@ -17,6 +19,10 @@ TOKEN_URL = "https://accounts.spotify.com/api/token"
 CURRENTLY_PLAYING_URL = "https://api.spotify.com/v1/me/player/currently-playing"
 TRACK_AUDIO_FEATURES = "https://api.spotify.com/v1/audio-features/"
 TRACK_AUDIO_ANALYSIS = "https://api.spotify.com/v1/audio-analysis/"
+
+# Get the absolute path of the directory where the script is running
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TOKEN_FILE = os.path.join(BASE_DIR, "spotify_tokens.json")
 
 # 🔹 Scopes (Permissions)
 SCOPES = "user-read-currently-playing user-read-playback-state"
@@ -29,16 +35,16 @@ refresh_token = None
 def load_tokens():
     global access_token, refresh_token
     try:
-        with open("spotify_tokens.json", "r") as f:
+        with open(TOKEN_FILE, "r") as f:
             token_data = json.load(f)
             access_token = token_data.get("access_token")
             refresh_token = token_data.get("refresh_token")
     except FileNotFoundError:
-        pass
+        print("⚠️ spotify_tokens.json not found. No tokens loaded.")
 
 # 🔹 Save tokens to file
 def save_tokens(token_data):
-    with open("spotify_tokens.json", "w") as f:
+    with open(TOKEN_FILE, "w") as f:
         json.dump(token_data, f)
 
 @app.route("/")
